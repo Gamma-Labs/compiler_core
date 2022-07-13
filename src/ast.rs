@@ -3,7 +3,19 @@ struct File {
 }
 
 enum Declaration {
-    FunctionDeclaration(Identifier, Parameters, Type, Scope),
+    FunctionDeclaration(Identifier, TemplateParameters, Parameters, Type, CompoundStatement),
+}
+
+struct TemplateParameters {
+    lists: std::Vec<std::Vec<Parameter>>,
+}
+
+struct Parameters {
+    lists: std::Vec<std::Vec<Parameter>>,
+}
+
+struct Type {
+
 }
 
 struct Identifier {
