@@ -1,13 +1,11 @@
-
-
-
-struct File{
-    declarations:std::Vec<Declaration>;
+struct File {
+    declarations: std::Vec<Declaration>,
 }
 
-enum Declaration{
-    FunctionDeclaration(Identifier,Parameters,Type,Scope)
+enum Declaration {
+    FunctionDeclaration(Identifier, Parameters, Type, Scope),
 }
-struct Identifier{
-    name:String
+
+struct Identifier {
+    name: String,
 }
