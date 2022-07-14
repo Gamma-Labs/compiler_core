@@ -1,7 +1,7 @@
 use std::vec::Vec;
 use std::option::Option;
 
-// list<Rule, Sep=","> != (Rule (Sep Rule)*)?
+// list<Rule, Sep=","> := (Rule (Sep Rule)*)?
 
 struct File { // (Declaration ";")*
     declarations: Vec<Declaration>,
@@ -13,7 +13,7 @@ enum Declaration {
 }
 
 struct Identifier {
-    name: String,
+    name: String, // [a-z A-Z][a-z A-Z 0-9 _]*
 }
 
 struct TemplateParameters { // ("<" list<Parameter> ">")*
@@ -72,8 +72,9 @@ enum Statement {
 }
 
 enum Mutability {
-    Immutable,
+    None,
     Mutable,
+    Const,
 }
 
 struct Lambda { // "[" "]" TemplateParameters Parameters "->" Type CompoundStatement
