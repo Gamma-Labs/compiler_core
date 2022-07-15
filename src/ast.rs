@@ -85,8 +85,6 @@ struct Lambda { // "[" "]" TemplateParameters Parameters "->" Type CompoundState
 }
 
 enum Literal {
-    False,
-    True,
     // CharLiteral(CharLiteral),
     // StringLiteral(StringLiteral),
     FloatLiteral(FloatLiteral),
