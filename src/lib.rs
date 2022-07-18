@@ -4,3 +4,4 @@
 
 pub mod ast;
 pub mod table;
+mod macros;
