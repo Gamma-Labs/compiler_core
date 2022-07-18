@@ -3,43 +3,49 @@ use std::option::Option;
 
 // list<Rule, Sep=","> := (Rule (Sep Rule)*)?
 
-struct File { // (Declaration ";")*
+pub struct File { // (Declaration ";")*
     declarations: Vec<Declaration>,
 }
 
-enum Declaration {
+pub enum Declaration {
     FunctionDeclaration(Identifier, TemplateParameters, Parameters, Type, CompoundStatement),
     // "fn" Identifier TemplateParameters Parameters "->" Type CompoundStatement
 }
 
-struct Identifier {
+pub struct Identifier {
     name: String, // [a-z A-Z][a-z A-Z 0-9 _]*
 }
 
-struct TemplateParameters { // ("<" list<Parameter> ">")*
+pub struct TemplateParameters { // ("<" list<Parameter> ">")*
     lists: Vec<Vec<Parameter>>,
 }
 
-struct Parameters { // ("(" list<Parameter> ")")*
+pub struct Parameters { // ("(" list<Parameter> ")")*
     lists: Vec<Vec<Parameter>>,
 }
 
-struct Type {
-    expr: Expression,
+pub enum Type {
+    Named(Identifier),
+    RefType(Mutability, Box<Type>),
+    // "*" Mutability Type
+    FnType(TemplateParameters, Parameters, Box<Type>),
+    // "fn" TemplateParameters Parameters "->" type
+    ArrayType(Box<Expression>, Box<Type>),
+    // "[" Expression "]" Type
 }
 
-struct CompoundStatement { // "{" (Statement ";")* "}"
+pub struct CompoundStatement { // "{" (Statement ";")* "}"
     stmts: Vec<Statement>,
 }
 
-struct Parameter { // "mut"? Identifier ":" Type ("=" Expression)?
+pub struct Parameter { // "mut"? Identifier ":" Type ("=" Expression)?
     mutable: Mutability,
     name: Identifier,
     type_: Type,
     default_value: Option<Expression>,
 }
 
-enum Expression {
+pub enum Expression {
     // "(" Expression ")"
     Lambda(Lambda),
     Literal(Literal),
@@ -50,14 +56,16 @@ enum Expression {
     // PrefixOperator Expression
     Infix(Box<Expression>, InfixOperator, Box<Expression>),
     // Expression InfixOperator Expression
+
+    /*
     FnType(TemplateParameters, Parameters, Box<Type>),
     // "fn" TemplateParameters Parameters "->" type
     ArrayType(Box<Expression>, Box<Type>),
     // "[" Expression "]" Type
-
+    */
 }
 
-enum Statement {
+pub enum Statement {
     CompoundStatement(CompoundStatement),
     LetStatement(Mutability, Identifier, Option<Type>, Expression),
     // "let" "mut"? Identifier (":" Type)? "=" Expression
@@ -71,20 +79,20 @@ enum Statement {
     ExpressionStatement(Expression),
 }
 
-enum Mutability {
+pub enum Mutability {
     None,
     Mutable,
     Const,
 }
 
-struct Lambda { // "[" "]" TemplateParameters Parameters "->" Type CompoundStatement
+pub struct Lambda { // "[" "]" TemplateParameters Parameters "->" Type CompoundStatement
     temp_params: TemplateParameters,
     params: Parameters,
     ret_type: Box<Type>,
     body: CompoundStatement,
 }
 
-enum Literal {
+pub enum Literal {
     // CharLiteral(CharLiteral),
     // StringLiteral(StringLiteral),
     FloatLiteral(FloatLiteral),
@@ -92,14 +100,14 @@ enum Literal {
     ArrayLiteral(ArrayLiteral),
 }
 
-enum BracketType {
+pub enum BracketType {
     Paren, // ()
     Square, // []
     Angle, // <>
     Brace, // ()
 }
 
-enum PrefixOperator {
+pub enum PrefixOperator {
     Increment,
     Decrement,
     Plus,
@@ -111,7 +119,7 @@ enum PrefixOperator {
     BorrowMut_, // "&" "mut"
 }
 
-enum InfixOperator {
+pub enum InfixOperator {
     // each line is higher precedence than the next
     Times, Divide, Modulo,
     Plus, Minus,
@@ -131,35 +139,35 @@ enum InfixOperator {
     BitwiseAndEquals, BitwiseXorEquals, BitwiseOrEquals,
 }
 
-struct FloatLiteral {
+pub struct FloatLiteral {
     value: String, // Digit+ "." Digit+ ("e" ("+" | "-")? Digit+)?
     suffix: FloatSuffix,
 }
 
-struct IntegerLiteral {
+pub struct IntegerLiteral {
     prefix: IntegerPrefix,
     value: String,
     suffix: IntegerSuffix,
 }
 
-struct ArrayLiteral { // "[" Expression ("," Expression)* "]"
+pub struct ArrayLiteral { // "[" Expression ("," Expression)* "]"
     elems: Vec<Expression>,
 }
 
-enum FloatSuffix {
+pub enum FloatSuffix {
     None,
     F32,
     F64,
 }
 
-enum IntegerPrefix {
+pub enum IntegerPrefix {
     None,
     BinaryPrefix, // "0b"
     OctalPrefix, // "0o"
     HexPrefix, // "0x"
 }
 
-enum IntegerSuffix {
+pub enum IntegerSuffix {
     None,
     U8, U16, U32, U64,
     I8, I16, I32, I64,

@@ -3,3 +3,4 @@
 #![allow(clippy::needless_return)]
 
 mod ast;
+mod table;
