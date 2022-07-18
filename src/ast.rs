@@ -4,7 +4,7 @@ use std::option::Option;
 // list<Rule, Sep=","> := (Rule (Sep Rule)*)?
 
 pub struct File { // (Declaration ";")*
-    declarations: Vec<Declaration>,
+    pub declarations: Vec<Declaration>,
 }
 
 pub enum Declaration {
@@ -13,15 +13,15 @@ pub enum Declaration {
 }
 
 pub struct Identifier {
-    name: String, // [a-z A-Z][a-z A-Z 0-9 _]*
+    pub name: String, // [a-z A-Z][a-z A-Z 0-9 _]*
 }
 
 pub struct TemplateParameters { // ("<" list<Parameter> ">")*
-    lists: Vec<Vec<Parameter>>,
+    pub lists: Vec<Vec<Parameter>>,
 }
 
 pub struct Parameters { // ("(" list<Parameter> ")")*
-    lists: Vec<Vec<Parameter>>,
+    pub lists: Vec<Vec<Parameter>>,
 }
 
 pub enum Type {
@@ -35,14 +35,14 @@ pub enum Type {
 }
 
 pub struct CompoundStatement { // "{" (Statement ";")* "}"
-    stmts: Vec<Statement>,
+    pub stmts: Vec<Statement>,
 }
 
 pub struct Parameter { // "mut"? Identifier ":" Type ("=" Expression)?
-    mutable: Mutability,
-    name: Identifier,
-    type_: Type,
-    default_value: Option<Expression>,
+    pub mutable: Mutability,
+    pub name: Identifier,
+    pub type_: Type,
+    pub default_value: Option<Expression>,
 }
 
 pub enum Expression {
@@ -86,10 +86,10 @@ pub enum Mutability {
 }
 
 pub struct Lambda { // "[" "]" TemplateParameters Parameters "->" Type CompoundStatement
-    temp_params: TemplateParameters,
-    params: Parameters,
-    ret_type: Box<Type>,
-    body: CompoundStatement,
+    pub temp_params: TemplateParameters,
+    pub params: Parameters,
+    pub ret_type: Box<Type>,
+    pub body: CompoundStatement,
 }
 
 pub enum Literal {
@@ -140,18 +140,18 @@ pub enum InfixOperator {
 }
 
 pub struct FloatLiteral {
-    value: String, // Digit+ "." Digit+ ("e" ("+" | "-")? Digit+)?
-    suffix: FloatSuffix,
+    pub value: String, // Digit+ "." Digit+ ("e" ("+" | "-")? Digit+)?
+    pub suffix: FloatSuffix,
 }
 
 pub struct IntegerLiteral {
-    prefix: IntegerPrefix,
-    value: String,
-    suffix: IntegerSuffix,
+    pub prefix: IntegerPrefix,
+    pub value: String,
+    pub suffix: IntegerSuffix,
 }
 
 pub struct ArrayLiteral { // "[" Expression ("," Expression)* "]"
-    elems: Vec<Expression>,
+    pub elems: Vec<Expression>,
 }
 
 pub enum FloatSuffix {
