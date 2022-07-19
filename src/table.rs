@@ -29,6 +29,19 @@ pub struct SymbolTable {
     pub table: Vec<SymbolEntry>,
 }
 
+impl SymbolTable {
+    pub fn lookup(&self, ident: &Identifier, scope: &Scope) -> &SymbolEntry {
+        for entry in self.table.iter().rev() {
+            if entry.name == ident.name {
+                if scope.parts.starts_with(&entry.scope.parts) {
+                    return &entry;
+                }
+            }
+        }
+        panic!("Identifier Not Found")
+    }
+}
+
 #[derive(Copy, Clone)]
 pub enum ValueCategory {
     LValue,
@@ -37,7 +50,7 @@ pub enum ValueCategory {
 
 #[derive(Clone)]
 pub enum ExpressionInfo {
-    Lambda(String), // the name of the lambda's type
+    Lambda(usize), // the id of the lambda's type
     Literal,
     Identifier(usize), // the id of the symbol in the symbol table
     Call(usize, Vec<usize>), //  the id's of the function to call and the arguments

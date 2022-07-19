@@ -40,6 +40,27 @@ pub enum Type {
     // "[" Expression "]" Type
 }
 
+pub fn type_from_name(name: &str) -> Type {
+    Type::Named(Identifier{name: name.to_string()})
+}
+
+pub fn array_type(len: usize, element_type: &Type) -> Type {
+    Type::ArrayType(
+        Box::new(
+            Expression::Literal(
+                Literal::IntegerLiteral(
+                    IntegerLiteral{
+                        prefix: IntegerPrefix::None,
+                        value: len.to_string(),
+                        suffix: IntegerSuffix::U64,
+                    }
+                )
+            )
+        ),
+        Box::new(element_type.clone()),
+    )
+}
+
 #[derive(Clone)]
 pub struct CompoundStatement { // "{" (Statement ";")* "}"
     pub stmts: Vec<Statement>,
@@ -77,8 +98,8 @@ pub enum Expression {
 #[derive(Clone)]
 pub enum Statement {
     CompoundStatement(CompoundStatement),
-    LetStatement(Mutability, Identifier, Option<Type>, Expression),
-    // "let" "mut"? Identifier (":" Type)? "=" Expression
+    LetStatement(Referenceness, Mutability, Identifier, Option<Type>, Expression),
+    // "let" "ref"? "mut"? Identifier (":" Type)? "=" Expression
     IfStatement(Expression, Option<CompoundStatement>, Box<Statement>),
     // "if" "(" Expression ")" (CompoundStatement "else")? Statement
     WhileStatement(Expression, Box<Statement>),
@@ -87,6 +108,12 @@ pub enum Statement {
     ContinueStatement,
     ReturnStatement(Expression),
     ExpressionStatement(Expression),
+}
+
+#[derive(Copy, Clone)]
+pub enum Referenceness {
+    None,
+    Reference,
 }
 
 #[derive(Copy, Clone)]
