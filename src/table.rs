@@ -21,6 +21,7 @@ pub struct SymbolEntry {
     pub scope: Scope,
     pub type_: Type,
     pub mutability: Mutability,
+    pub referenceness: Referenceness,
     // pub borrow_status: BorrowStatus
 }
 
