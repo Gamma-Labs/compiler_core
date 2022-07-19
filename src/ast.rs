@@ -3,27 +3,33 @@ use std::option::Option;
 
 // list<Rule, Sep=","> := (Rule (Sep Rule)*)?
 
+#[derive(Clone)]
 pub struct File { // (Declaration ";")*
     pub declarations: Vec<Declaration>,
 }
 
+#[derive(Clone)]
 pub enum Declaration {
     FunctionDeclaration(Identifier, TemplateParameters, Parameters, Type, CompoundStatement),
     // "fn" Identifier TemplateParameters Parameters "->" Type CompoundStatement
 }
 
+#[derive(Clone)]
 pub struct Identifier {
     pub name: String, // [a-z A-Z][a-z A-Z 0-9 _]*
 }
 
+#[derive(Clone, Default)]
 pub struct TemplateParameters { // ("<" list<Parameter> ">")*
     pub lists: Vec<Vec<Parameter>>,
 }
 
+#[derive(Clone)]
 pub struct Parameters { // ("(" list<Parameter> ")")*
     pub lists: Vec<Vec<Parameter>>,
 }
 
+#[derive(Clone)]
 pub enum Type {
     Named(Identifier),
     RefType(Mutability, Box<Type>),
@@ -34,17 +40,20 @@ pub enum Type {
     // "[" Expression "]" Type
 }
 
+#[derive(Clone)]
 pub struct CompoundStatement { // "{" (Statement ";")* "}"
     pub stmts: Vec<Statement>,
 }
 
+#[derive(Clone)]
 pub struct Parameter { // "mut"? Identifier ":" Type ("=" Expression)?
-    pub mutable: Mutability,
+    pub mutability: Mutability,
     pub name: Identifier,
     pub type_: Type,
     pub default_value: Option<Expression>,
 }
 
+#[derive(Clone)]
 pub enum Expression {
     // "(" Expression ")"
     Lambda(Lambda),
@@ -65,6 +74,7 @@ pub enum Expression {
     */
 }
 
+#[derive(Clone)]
 pub enum Statement {
     CompoundStatement(CompoundStatement),
     LetStatement(Mutability, Identifier, Option<Type>, Expression),
@@ -79,12 +89,14 @@ pub enum Statement {
     ExpressionStatement(Expression),
 }
 
+#[derive(Copy, Clone)]
 pub enum Mutability {
     None,
     Mutable,
     Const,
 }
 
+#[derive(Clone)]
 pub struct Lambda { // "[" "]" TemplateParameters Parameters "->" Type CompoundStatement
     pub temp_params: TemplateParameters,
     pub params: Parameters,
@@ -92,6 +104,7 @@ pub struct Lambda { // "[" "]" TemplateParameters Parameters "->" Type CompoundS
     pub body: CompoundStatement,
 }
 
+#[derive(Clone)]
 pub enum Literal {
     // CharLiteral(CharLiteral),
     // StringLiteral(StringLiteral),
@@ -100,6 +113,7 @@ pub enum Literal {
     ArrayLiteral(ArrayLiteral),
 }
 
+#[derive(Copy, Clone)]
 pub enum BracketType {
     Paren, // ()
     Square, // []
@@ -107,6 +121,7 @@ pub enum BracketType {
     Brace, // ()
 }
 
+#[derive(Copy, Clone)]
 pub enum PrefixOperator {
     Increment,
     Decrement,
@@ -119,6 +134,7 @@ pub enum PrefixOperator {
     BorrowMut_, // "&" "mut"
 }
 
+#[derive(Copy, Clone)]
 pub enum InfixOperator {
     // each line is higher precedence than the next
     Times, Divide, Modulo,
@@ -139,27 +155,32 @@ pub enum InfixOperator {
     BitwiseAndEquals, BitwiseXorEquals, BitwiseOrEquals,
 }
 
+#[derive(Clone)]
 pub struct FloatLiteral {
     pub value: String, // Digit+ "." Digit+ ("e" ("+" | "-")? Digit+)?
     pub suffix: FloatSuffix,
 }
 
+#[derive(Clone)]
 pub struct IntegerLiteral {
     pub prefix: IntegerPrefix,
     pub value: String,
     pub suffix: IntegerSuffix,
 }
 
+#[derive(Clone)]
 pub struct ArrayLiteral { // "[" Expression ("," Expression)* "]"
     pub elems: Vec<Expression>,
 }
 
+#[derive(Copy, Clone)]
 pub enum FloatSuffix {
     None,
     F32,
     F64,
 }
 
+#[derive(Copy, Clone)]
 pub enum IntegerPrefix {
     None,
     BinaryPrefix, // "0b"
@@ -167,6 +188,7 @@ pub enum IntegerPrefix {
     HexPrefix, // "0x"
 }
 
+#[derive(Copy, Clone)]
 pub enum IntegerSuffix {
     None,
     U8, U16, U32, U64,

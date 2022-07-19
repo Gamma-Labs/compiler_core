@@ -3,15 +3,18 @@ use std::collections::HashMap;
 
 use crate::ast::*;
 
+#[derive(Clone, Default)]
 pub struct Scope {
     pub parts: Vec<String>,
 }
 
+#[derive(Copy, Clone)]
 pub enum BorrowStatus {
     MutablyBorrowed,
     ImmutablyBorrowed(usize),
 }
 
+#[derive(Clone)]
 pub struct SymbolEntry {
     pub id: usize,
     pub name: String,
@@ -21,15 +24,18 @@ pub struct SymbolEntry {
     // pub borrow_status: BorrowStatus
 }
 
+#[derive(Clone, Default)]
 pub struct SymbolTable {
     pub table: Vec<SymbolEntry>,
 }
 
+#[derive(Copy, Clone)]
 pub enum ValueCategory {
     LValue,
     RValue,
 }
 
+#[derive(Clone)]
 pub enum ExpressionInfo {
     Lambda(String), // the name of the lambda's type
     Literal,
@@ -38,6 +44,7 @@ pub enum ExpressionInfo {
     Borrow_(Mutability, usize), // the mutability of the borrow, and the id of the borrowed expression
 }
 
+#[derive(Clone)]
 pub struct ExpressionEntry {
     pub id: usize,
     pub type_: Type,
@@ -46,26 +53,19 @@ pub struct ExpressionEntry {
     pub info: ExpressionInfo,
 }
 
+#[derive(Clone, Default)]
 pub struct ExpressionTable {
     pub table: HashMap<*const Expression, ExpressionEntry>,
 }
 
+impl ExpressionTable {
+    pub fn lookup(&self, expr: &Expression) -> &ExpressionEntry {
+        return &self.table[&(expr as *const Expression)];
+    }
+}
+
+#[derive(Clone, Default)]
 pub struct Info {
     pub symbol_table: SymbolTable,
     pub expr_table: ExpressionTable,
-}
-
-impl Default for Info {
-
-    fn default() -> Self {
-        Info{
-            symbol_table: SymbolTable{
-                table: Vec::new(),
-            },
-            expr_table: ExpressionTable{
-                table: HashMap::new(),
-            },
-        }
-    }
-
 }
